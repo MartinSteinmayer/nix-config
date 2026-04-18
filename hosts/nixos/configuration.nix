@@ -10,6 +10,10 @@
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Berlin";
 
+  # Boot 
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   users.users.martin = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
