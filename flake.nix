@@ -15,27 +15,6 @@
 
   outputs = inputs@{ nixpkgs, home-manager, ... }: {
     nixosConfigurations = {
-      nixos-vm = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-
-        specialArgs = { inherit inputs; };
-
-        modules = [
-          ./hosts/nixos-vm/configuration.nix
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-backup";
-
-            home-manager.users.martin =
-              import ./home/martin.nix;
-            home-manager.sharedModules = [ inputs.walker.homeManagerModules.default ];
-          }
-        ];
-      };
-
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
 
