@@ -21,10 +21,18 @@
   };
 
   programs.zsh.enable = true;
-
   programs.firefox.enable = true;
   programs.hyprland.enable = true;
   programs.yazi.enable = true;
+
+  nixpkgs.config.allowUnfree = true;
+
+  # NVIDIA
+  hardware.graphics.enable = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia.open = true;  # see the note above
+  hardware.nvidia.modesetting.enable = true;
+
 
   services.xserver.desktopManager.runXdgAutostartIfNone = true;
 
