@@ -19,7 +19,7 @@ home.pointerCursor = {
 
 fonts.fontconfig = {
   enable = true;
-  antialias = true;
+  antialiasing = true;
   hinting = {
     enable = true;
     style = "slight";
