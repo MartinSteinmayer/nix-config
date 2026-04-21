@@ -20,10 +20,7 @@ home.pointerCursor = {
 fonts.fontconfig = {
   enable = true;
   antialiasing = true;
-  hinting = {
-    enable = true;
-    style = "slight";
-  };
+  hinting = "slight";
 };
 
 gtk = {
