@@ -24,10 +24,6 @@ fonts.fontconfig = {
     enable = true;
     style = "slight";
   };
-  subpixel = {
-    rgba = "rgb";
-    lcdfilter = "default";
-  };
 };
 
 gtk = {
