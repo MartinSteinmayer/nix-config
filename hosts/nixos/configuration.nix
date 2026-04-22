@@ -42,7 +42,7 @@
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   security.rtkit.enable = true;
 

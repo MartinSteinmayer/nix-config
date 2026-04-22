@@ -25,6 +25,7 @@ fonts.fontconfig = {
 
 gtk = {
   enable = true;
+  gtk4.theme = null;
   cursorTheme = {
     name = "Bibata-Modern-Classic";
     package = pkgs.bibata-cursors;
