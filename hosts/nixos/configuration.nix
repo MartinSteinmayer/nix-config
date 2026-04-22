@@ -42,9 +42,36 @@
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
+  hardware.pulseaudio.enable = false;
+
+  security.rtkit.enable = true;
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # Uncomment the following line if you want to use JACK applications
+    # jack.enable = true;
+  };
+
+  #
+  # Bluetooth
+  #
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "0";
+  };
+
+  fonts = {
+    packages = with pkgs; [
+      nerd-fonts._0xproto
+    ];
   };
 
   nix.settings = {
