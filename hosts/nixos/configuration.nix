@@ -12,7 +12,7 @@
 
   # Boot 
   boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;  hardware.video.hidpi.enable = false; # Breaks TTY font size & antialiasing
+  boot.loader.efi.canTouchEfiVariables = true;  
   users.users.martin = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
