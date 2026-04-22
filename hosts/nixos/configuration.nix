@@ -12,8 +12,7 @@
 
   # Boot 
   boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
+  boot.loader.efi.canTouchEfiVariables = true;  hardware.video.hidpi.enable = false; # Breaks TTY font size & antialiasing
   users.users.martin = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
@@ -83,6 +82,21 @@
           "0xProto Nerd Font Mono"
           "Noto Sans Mono"
         ];
+      };
+      # Fixes pixelation
+      antialias = true;
+
+      # Fixes antialiasing blur
+      hinting = {
+        enable = true;
+        style = "hintfull"; # no difference
+        autohint = true; # no difference
+      };
+
+      subpixel = {
+        # Makes it bolder
+        rgba = "rgb";
+        lcdfilter = "default"; # no difference
       };
     };
   };
