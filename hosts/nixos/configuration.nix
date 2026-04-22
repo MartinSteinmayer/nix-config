@@ -71,7 +71,20 @@
   fonts = {
     packages = with pkgs; [
       nerd-fonts._0xproto
+      noto-fonts
+      noto-fonts-color-emoji
+      noto-fonts-cjk-sans
+      liberation_ttf
     ];
+
+    fontconfig = {
+      defaultFonts = {
+        monospace = [
+          "0xProto Nerd Font Mono"
+          "Noto Sans Mono"
+        ];
+      };
+    };
   };
 
   nix.settings = {
