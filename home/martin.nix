@@ -49,6 +49,9 @@ gtk = {
       gcc
       kitty
       nautilus
+      grim
+      slurp
+      wl-clipboard
     ];
 
   xdg.configFile."waybar/scripts/.keep".text = "";
