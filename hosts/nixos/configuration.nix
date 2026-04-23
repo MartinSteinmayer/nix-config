@@ -71,11 +71,6 @@
     powerOnBoot = true;
   };
 
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    MOZ_ENABLE_WAYLAND = "0";
-  };
-
   fonts = {
     packages = with pkgs; [
       nerd-fonts._0xproto
