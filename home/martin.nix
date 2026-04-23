@@ -234,28 +234,57 @@ gtk = {
         * {
           font-family: JetBrainsMono, monospace;
           font-size: 13px;
+          border: none;
+          min-height: 0;
         }
 
         window#waybar {
-          background-color: #1e1e2e;
-          color: #cdd6f4;
+          background: transparent;
+          color: #e0def4;
+        }
+
+        .modules-left,
+        .modules-center,
+        .modules-right {
+          margin: 8px 10px 0;
+          padding: 4px 8px;
+          border-radius: 12px;
+          background: rgba(31, 29, 46, 0.72);
+          border: 1px solid rgba(144, 140, 170, 0.35);
         }
 
         #workspaces button {
-          padding: 5px;
-          color: #cdd6f4;
+          margin: 0 4px;
+          padding: 0 10px;
+          border-radius: 8px;
+          color: #908caa;
+          transition: all 150ms ease;
+        }
+
+        #workspaces button:hover {
+          color: #e0def4;
+          background: rgba(38, 35, 58, 0.85);
         }
 
         #workspaces button.active {
-          background-color: #89b4fa;
-          color: #1e1e2e;
+          color: #191724;
+          background: #c4a7e7;
         }
 
         #clock,
         #network,
         #cpu,
-        #memory {
+        #memory,
+        #tray {
+          margin: 0 4px;
           padding: 0 10px;
+          border-radius: 8px;
+          color: #e0def4;
+          background: rgba(38, 35, 58, 0.55);
+        }
+
+        #network.disconnected {
+          color: #eb6f92;
         }
       '';
     };
@@ -269,6 +298,16 @@ gtk = {
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
+    systemd.variables = ["--all"];
     extraConfig = builtins.readFile ./hyprland.conf;
+  };
+
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      preload = [ "${./wallpapers/rose-pine-moon-wallpaper.jpeg}" ];
+      wallpaper = [ ",${./wallpapers/rose-pine-moon-wallpaper.jpeg}" ];
+      splash = false;
+    };
   };
 }
