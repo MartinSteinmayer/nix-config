@@ -17,12 +17,6 @@ home.pointerCursor = {
   size = 16;
 };
 
-fonts.fontconfig = {
-  enable = true;
-  antialiasing = true;
-  hinting = "slight";
-};
-
 gtk = {
   enable = true;
   gtk4.theme = null;
@@ -54,9 +48,10 @@ gtk = {
     ++ lib.optionals isLinux [
       gcc
       kitty
-      waybar
       nautilus
     ];
+
+  xdg.configFile."waybar/scripts/.keep".text = "";
 
   programs = {
     zsh = {
@@ -181,6 +176,81 @@ gtk = {
     starship = {
       enable = true;
     };
+
+    waybar = {
+      enable = true;
+      systemd.enable = true;
+
+      settings = [
+        {
+          layer = "top";
+          position = "top";
+          height = 32;
+
+          "modules-left" = [ "hyprland/workspaces" ];
+          "modules-center" = [ "clock" ];
+          "modules-right" = [ "network" "cpu" "memory" "tray" ];
+
+          "hyprland/workspaces" = {
+            "disable-scroll" = true;
+            "all-outputs" = true;
+          };
+
+          clock = {
+            format = "{:%H:%M}";
+            "tooltip-format" = "{:%A, %d %B %Y}";
+          };
+
+          network = {
+            "format-wifi" = "  {signalStrength}%";
+            "format-ethernet" = "󰈀  Connected";
+            "format-disconnected" = "  Offline";
+          };
+
+          cpu = {
+            format = "  {usage}%";
+          };
+
+          memory = {
+            format = "  {used}MB";
+          };
+
+          tray = {
+            spacing = 10;
+          };
+        }
+      ];
+
+      style = ''
+        * {
+          font-family: JetBrainsMono, monospace;
+          font-size: 13px;
+        }
+
+        window#waybar {
+          background-color: #1e1e2e;
+          color: #cdd6f4;
+        }
+
+        #workspaces button {
+          padding: 5px;
+          color: #cdd6f4;
+        }
+
+        #workspaces button.active {
+          background-color: #89b4fa;
+          color: #1e1e2e;
+        }
+
+        #clock,
+        #network,
+        #cpu,
+        #memory {
+          padding: 0 10px;
+        }
+      '';
+    };
+
     walker = {
       enable = true;
       runAsService = true;

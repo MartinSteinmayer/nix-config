@@ -22,7 +22,16 @@
   programs.zsh.enable = true;
   programs.firefox.enable = true;
   programs.hyprland.enable = true;
+  programs.hyprland.xwayland.enable = true;
   programs.yazi.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    config.common.default = "*";
+  };
 
   nixpkgs.config.allowUnfree = true;
 
@@ -74,6 +83,7 @@
       noto-fonts-color-emoji
       noto-fonts-cjk-sans
       liberation_ttf
+      font-awesome_4
     ];
 
     fontconfig = {
@@ -89,8 +99,8 @@
       # Fixes antialiasing blur
       hinting = {
         enable = true;
-        style = "full"; # valid values: none, slight, medium, full
-        autohint = true; # no difference
+        style = "slight";
+        autohint = false;
       };
 
       subpixel = {
@@ -111,6 +121,12 @@
       "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
       "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
     ];
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
   };
 
   system.stateVersion = "25.11";
