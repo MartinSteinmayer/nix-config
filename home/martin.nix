@@ -298,16 +298,19 @@ gtk = {
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
-    systemd.variables = ["--all"];
     extraConfig = builtins.readFile ./hyprland.conf;
   };
 
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      preload = [ "${./wallpapers/rose-pine-moon-wallpaper.jpeg}" ];
-      wallpaper = [ ",${./wallpapers/rose-pine-moon-wallpaper.jpeg}" ];
-      splash = false;
-    };
+services.hyprpaper = {
+  enable = true;
+  settings = {
+    wallpaper = [
+      {
+        monitor = "";
+        path = "${./wallpapers/rose-pine-moon-wallpaper.jpeg}";
+      }
+    ];
+    splash = false;
   };
+};
 }
