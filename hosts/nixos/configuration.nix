@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -19,89 +19,105 @@
     shell = pkgs.zsh;
   };
 
-  programs.zsh.enable = true;
-  programs.firefox.enable = true;
-  programs.hyprland.enable = true;
-  programs.hyprland.xwayland.enable = true;
-  programs.yazi.enable = true;
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
-    config.common.default = "*";
+  
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    MOZ_ENABLE_WAYLAND = "1";
   };
+
+  programs = {
+    zsh.enable = true;
+    firefox.enable = true;
+    hyprland = {
+        enable = true;
+        withUWSM = true; 
+        xwayland.enable = true;
+    };
+    yazi.enable = true;               
+  };
+
+  nixpkgs.overlays = [
+    (_final: prev: {
+      nh = inputs.nh.packages.${prev.system}.default;
+    })
+  ];
 
   nixpkgs.config.allowUnfree = true;
 
-  # NVIDIA
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.open = true;  # see the note above
-  hardware.nvidia.modesetting.enable = true;
+  hardware = {
+    nvidia = {
+        open = false;
+        modesetting.enable = true;    
+    };
+    graphics = {
+        enable = true;
+        enable32Bit = true;    
+        extraPackages = [];
+    };
+    bluetooth = {
+        enable = true;
+        powerOnBoot = true;
+    };
+  };
 
-
-  services.xserver.desktopManager.runXdgAutostartIfNone = true;
-
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.displayManager.defaultSession = "hyprland";
-
-  hardware.graphics.enable = true;
-  hardware.graphics.enable32Bit = true;
-
-  services.pulseaudio.enable = false;
+  services = {
+    displayManager = {
+      sddm = {
+        enable = true;
+        wayland.enable = false;
+      };
+      defaultSession = "hyprland-uwsm";
+    };
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      # Uncomment the following line if you want to use JACK applications
+      # jack.enable = true;
+    };
+    xserver.videoDrivers = [ "nvidia" ];
+    xserver.enable = true;
+    pulseaudio.enable = false;
+  };
 
   security.rtkit.enable = true;
 
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # Uncomment the following line if you want to use JACK applications
-    # jack.enable = true;
-  };
-
-  #
-  # Bluetooth
-  #
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
 
   fonts = {
+    enableDefaultPackages = true;
     packages = with pkgs; [
       nerd-fonts._0xproto
       noto-fonts
-      noto-fonts-color-emoji
       noto-fonts-cjk-sans
+      noto-fonts-color-emoji
+      source-code-pro
+      source-sans-pro
+      source-serif-pro
       liberation_ttf
-      font-awesome_4
+      dejavu_fonts
+      corefonts
+      google-fonts
+      font-awesome
     ];
 
     fontconfig = {
-      defaultFonts = {
-        monospace = [
-          "0xProto Nerd Font Mono"
-          "Noto Sans Mono"
-        ];
-      };
-      # Fixes pixelation
       antialias = true;
-
-      # Fixes antialiasing blur
       hinting = {
         enable = true;
+        autohint = true;
         style = "slight";
-        autohint = false;
       };
-
-      subpixel = {
-        # Makes it bolder
-        rgba = "rgb";
-        lcdfilter = "default"; # no difference
+      defaultFonts = {
+        serif = [
+          "Source Serif Pro"
+        ];
+        sansSerif = [
+          "Source Sans Pro"
+        ];
+        monospace = [
+          "0xProto Nerd Font Mono"
+        ];
       };
     };
   };

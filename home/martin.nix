@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 
 let
   isLinux = pkgs.stdenv.isLinux;
@@ -9,60 +9,88 @@ in
 
   home.stateVersion = "25.11";
 
-home.pointerCursor = {
-  gtk.enable = true;
-  x11.enable = true;
-  package = pkgs.bibata-cursors;
-  name = "Bibata-Modern-Classic";
-  size = 16;
-};
-
-home.sessionVariables = {
-  NIXOS_OZONE_WL = "1";
-  MOZ_ENABLE_WAYLAND = "1";
-};
-
-gtk = {
-  enable = true;
-  gtk4.theme = null;
-  cursorTheme = {
-    name = "Bibata-Modern-Classic";
-    package = pkgs.bibata-cursors;
+  home.pointerCursor = {
+    gtk.enable = true;
+    package = pkgs.rose-pine-cursor;
+    name = "BreezeX-RosePine-Linux";
+    size = 16;
   };
 
-  gtk3.extraConfig = {
-    "gtk-cursor-theme-name" = "Bibata-Modern-Classic";
+  gtk = {
+    enable = true;
+    gtk4.theme = null;
+
+    theme = {
+      package = pkgs.rose-pine-gtk-theme;
+      name = "rose-pine-gtk-theme";
+    };
+
+    iconTheme = {
+      package = pkgs.rose-pine-icon-theme;
+      name = "rose-pine-icon-theme-unstable";
+    };
+
+    font = {
+      name = "Sans";
+      size = 11;
+    };
   };
 
-  gtk4.extraConfig = {
-    Settings = ''
-      gtk-cursor-theme-name=Bibata-Modern-Classic
-    '';
-  };
-};
   home.packages =
     with pkgs;
     [
       git
-      neovim
+      anki
+      gh
       wget
       tree
       yazi
-      opencode
+      inputs.llm-agents.packages.${pkgs.system}.opencode
+      inputs.llm-agents.packages.${pkgs.system}.pi
       ripgrep
+      todoist
+      kitty
+      fzf
+      gcc
+      spotify
+      texliveFull
+      todoist-electron
     ]
     ++ lib.optionals isLinux [
-      gcc
-      kitty
+      teams-for-linux
+      wlr-randr
       nautilus
       grim
       slurp
       wl-clipboard
+      pavucontrol
+      pamixer
+      rose-pine-hyprcursor
+      bluez-tools
+      blueman
     ];
 
-  xdg.configFile."waybar/scripts/.keep".text = "";
-
   programs = {
+    vscode = {
+      enable = true;
+      profiles.default.extensions = with pkgs.vscode-extensions; [
+        vscodevim.vim
+      ];
+    };
+
+    nvf = {
+    enable = true;
+    # your settings need to go into the settings attribute set
+    # most settings are documented in the appendix
+    settings = {
+      vim.viAlias = false;
+      vim.vimAlias = true;
+      vim.lsp = {
+        enable = true;
+      };
+    };
+  };
+
     zsh = {
       enable = true;
 
@@ -84,12 +112,12 @@ gtk = {
           dl = "cd ~/Downloads";
           tum = "cd ~/Documents/TUM";
           notes = "cd ~/Documents/Notes";
-          
-          edit = "sudo -e";
+          masters = "cd ~/Documents/TUM/Masters";
+          itdl = "cd ~/Documents/TUM/Masters/1.Semester/ITDL";
+          dse = "cd ~/Documents/TUM/Masters/1.Semester/DSE";
         }
         // lib.optionalAttrs isLinux {
-          update = "sudo nixos-rebuild switch --flake /etc/nixos#nixos-vm";
-          off = "gdbus call --session --dest org.gnome.ScreenSaver --object-path /org/gnome/ScreenSaver --method org.gnome.ScreenSaver.SetActive true";
+          update = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
         };
 
       initContent = ''
@@ -186,6 +214,13 @@ gtk = {
       enable = true;
     };
 
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = "/etc/nixos"; # sets NH_OS_FLAKE variable for you
+    };
+
     waybar = {
       enable = true;
       systemd.enable = true;
@@ -198,7 +233,7 @@ gtk = {
 
           "modules-left" = [ "hyprland/workspaces" ];
           "modules-center" = [ "clock" ];
-          "modules-right" = [ "network" "cpu" "memory" "tray" ];
+          "modules-right" = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
 
           "hyprland/workspaces" = {
             "disable-scroll" = true;
@@ -208,6 +243,17 @@ gtk = {
           clock = {
             format = "{:%H:%M}";
             "tooltip-format" = "{:%A, %d %B %Y}";
+          };
+
+          pulseaudio = {
+            format = "{icon}  {volume}%";
+            "format-muted" = "󰖁  muted";
+            "format-icons" = {
+              default = [ "󰕿" "󰖀" "󰕾" ];
+            };
+            "on-click" = "pavucontrol";
+            "on-click-right" = "pamixer -t";
+            "scroll-step" = 5;
           };
 
           network = {
@@ -221,7 +267,7 @@ gtk = {
           };
 
           memory = {
-            format = "  {used}MB";
+            format = "  {used}GB";
           };
 
           tray = {
@@ -272,6 +318,7 @@ gtk = {
         }
 
         #clock,
+        #pulseaudio,
         #network,
         #cpu,
         #memory,
@@ -297,20 +344,27 @@ gtk = {
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
+    systemd.enable = false;
+    xwayland.enable = false;
     extraConfig = builtins.readFile ./hyprland.conf;
   };
 
-services.hyprpaper = {
-  enable = true;
-  settings = {
-    wallpaper = [
-      {
-        monitor = "";
-        path = "${./wallpapers/rose-pine-moon-wallpaper.jpeg}";
-      }
-    ];
-    splash = false;
-  };
+services = {
+    hyprpaper = {
+      enable = true;
+      settings = {
+        wallpaper = [
+          {
+            monitor = "";
+            path = "${./wallpapers/rose-pine-moon-wallpaper.jpeg}";
+          }
+        ];
+        splash = false;
+      };
+    };
+    mako = {
+        enable = true;
+    };
 };
+
 }
