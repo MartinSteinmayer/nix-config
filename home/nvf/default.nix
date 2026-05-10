@@ -1,0 +1,33 @@
+{ ... }:
+{
+  imports = [
+    ./plugins/ai/sidekick.nix
+    ./core.nix
+    ./keymaps.nix
+    ./autocmd.nix
+    ./lsp.nix
+    ./plugins/autocomplete.nix
+    ./plugins/autopairs/nvim-autopairs.nix
+    ./plugins/comments.nix
+    ./plugins/filetree.nix
+    ./plugins/formatter.nix
+    ./plugins/git/gitsigns.nix
+    ./plugins/mini/indentscope.nix
+    ./plugins/navigation/harpoon.nix
+    ./plugins/statusline/lualine.nix
+    ./plugins/treesitter.nix
+    ./plugins/ui/colorizer.nix
+    ./plugins/ui/illuminate.nix
+    ./plugins/ui/noice.nix
+    ./plugins/utility/aerial.nix
+    ./plugins/utility/images/image.nix
+    ./plugins/utility/leetcode.nix
+    ./plugins/utility/motion/leap.nix
+    ./plugins/utility/persistence.nix
+    ./plugins/utility/snacks.nix
+    ./plugins/utility/vimtex.nix
+    ./plugins/visuals/neoscroll.nix
+    ./plugins/visuals/web-devicons.nix
+    ./plugins/visuals/zen-mode.nix
+  ];
+}

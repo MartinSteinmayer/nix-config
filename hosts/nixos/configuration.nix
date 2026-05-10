@@ -1,4 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -7,33 +13,47 @@
 
   networking.hostName = "nixos";
 
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn ];
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Berlin";
 
-  # Boot 
+  # Boot
   boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;  
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernel.sysctl = {
+    "kernel.kptr_restrict" = 0;
+    "kernel.perf_event_paranoid" = -1;
+  };
+
   users.users.martin = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
     shell = pkgs.zsh;
   };
 
-  
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
   };
 
+  environment.systemPackages = with pkgs; [
+    perf
+    gnumake
+  ];
+
   programs = {
     zsh.enable = true;
     firefox.enable = true;
+    nix-ld.enable = true;
     hyprland = {
-        enable = true;
-        withUWSM = true; 
-        xwayland.enable = true;
+      enable = true;
+      withUWSM = true;
+      xwayland.enable = true;
     };
-    yazi.enable = true;               
+    yazi.enable = true;
   };
 
   nixpkgs.overlays = [
@@ -46,21 +66,24 @@
 
   hardware = {
     nvidia = {
-        open = false;
-        modesetting.enable = true;    
+      open = false;
+      modesetting.enable = true;
     };
     graphics = {
-        enable = true;
-        enable32Bit = true;    
-        extraPackages = [];
+      enable = true;
+      enable32Bit = true;
+      extraPackages = [ ];
     };
     bluetooth = {
-        enable = true;
-        powerOnBoot = true;
+      enable = true;
+      powerOnBoot = true;
     };
   };
 
   services = {
+    udev.extraRules = builtins.readFile ./rules/99-jlink.rules;
+    power-profiles-daemon.enable = true;
+    upower.enable = true;
     displayManager = {
       sddm = {
         enable = true;
@@ -82,7 +105,6 @@
   };
 
   security.rtkit.enable = true;
-
 
   fonts = {
     enableDefaultPackages = true;
@@ -123,14 +145,15 @@
   };
 
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     extra-substituters = [
-      "https://walker.cachix.org"
-      "https://walker-git.cachix.org"
+      "https://noctalia.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
-      "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
     ];
   };
 
