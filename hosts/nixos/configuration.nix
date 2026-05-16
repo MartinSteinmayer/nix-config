@@ -13,6 +13,17 @@
 
   networking.hostName = "nixos";
 
+  # External filesystems
+
+  fileSystems."/home/martin/Games" = {
+    device = "/dev/disk/by-label/LinuxGames";
+    fsType = "ext4";
+    options = [
+      "defaults"
+      "nofail"
+    ];
+  };
+
   networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn ];
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Berlin";
@@ -20,6 +31,7 @@
   # Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelParams = [ "mem_sleep_default=s2idle" ];
   boot.kernel.sysctl = {
     "kernel.kptr_restrict" = 0;
     "kernel.perf_event_paranoid" = -1;
@@ -42,12 +54,23 @@
   environment.systemPackages = with pkgs; [
     perf
     gnumake
+    libuuid
   ];
 
   programs = {
     zsh.enable = true;
     firefox.enable = true;
     nix-ld.enable = true;
+    steam.enable = true;
+    gamescope = {
+      enable = true;
+      capSysNice = false;
+    };
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = false;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
     hyprland = {
       enable = true;
       withUWSM = true;
@@ -68,6 +91,7 @@
     nvidia = {
       open = false;
       modesetting.enable = true;
+      powerManagement.enable = true;
     };
     graphics = {
       enable = true;
@@ -162,6 +186,10 @@
     dates = "weekly";
     options = "--delete-older-than 14d";
   };
+
+  powerManagement.resumeCommands = ''
+    logger "resume hook ran"
+  '';
 
   system.stateVersion = "25.11";
 }

@@ -90,6 +90,7 @@ in
       gh
       unzip
       wget
+      vlc
 
       # Course: Embedded Systems
       gcc-arm-embedded
@@ -161,6 +162,8 @@ in
         ess = "cd ~/Documents/TUM/Masters/1.Semester/ESS";
         enix = "cd ~/nixcfg/ && vim";
         cpi = "vim ~/.pi/agent/AGENTS.md";
+        life = "cd ~/Documents/life/";
+        pifig = "cd ~/.pi && vim ./agent/AGENTS.md";
       }
       // lib.optionalAttrs isLinux {
         update = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
@@ -277,7 +280,7 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = false;
-    xwayland.enable = false;
+    xwayland.enable = true;
     extraConfig = builtins.readFile ./hyprland.conf;
   };
 
