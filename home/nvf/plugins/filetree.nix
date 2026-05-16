@@ -95,9 +95,57 @@
         git_ignored = false;
         exclude = [ ];
       };
+      sync_root_with_cwd = true;
+      respect_buf_cwd = true;
+      renderer.root_folder_label = ":~";
       view.width = 30;
       actions.open_file.resize_window = false;
       update_focused_file.enable = true;
     };
   };
+
+  programs.nvf.settings.vim.luaConfigPost = ''
+    do
+      local ok_config, nvim_tree_config = pcall(require, "nvim-tree.config")
+      if ok_config and nvim_tree_config.g and nvim_tree_config.g.renderer then
+        nvim_tree_config.g.renderer.root_folder_label = function(path)
+          local home = vim.loop.os_homedir()
+          local display = path
+
+          if home and path:sub(1, #home) == home then
+            display = "~" .. path:sub(#home + 1)
+          end
+
+          local prefix = ""
+          if display:sub(1, 2) == "~/" then
+            prefix = "~/"
+            display = display:sub(3)
+          elseif display:sub(1, 1) == "/" then
+            prefix = "/"
+            display = display:sub(2)
+          end
+
+          local parts = {}
+          for part in display:gmatch("[^/]+") do
+            parts[#parts + 1] = part
+          end
+
+          if #parts > 3 then
+            local trimmed = {}
+            for i = #parts - 2, #parts do
+              trimmed[#trimmed + 1] = parts[i]
+            end
+            parts = trimmed
+          end
+
+          return prefix .. table.concat(parts, "/")
+        end
+      end
+
+      local ok_api, api = pcall(require, "nvim-tree.api")
+      if ok_api then
+        api.tree.reload()
+      end
+    end
+  '';
 }

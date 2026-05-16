@@ -264,6 +264,12 @@
       desc = "Format file or range";
     }
     {
+      key = "<leader>W";
+      mode = "n";
+      action = ":noautocmd write<CR>";
+      desc = "Save without formatting";
+    }
+    {
       key = "<leader>/";
       mode = "n";
       lua = true;
