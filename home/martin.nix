@@ -53,6 +53,7 @@ in
 
   home.sessionPath = [
     "/opt/SEGGER/JLink_Linux_V942_x86_64"
+    "$HOME/.local/bin"
   ];
 
   home.pointerCursor = {
@@ -109,6 +110,8 @@ in
       ghostscript
       spotify
       texliveFull
+      bruno
+      chromium
       todoist-electron
       obscura
     ]
@@ -135,6 +138,12 @@ in
       ];
     };
 
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+
     zsh = {
       enable = true;
 
@@ -159,6 +168,7 @@ in
         itdl = "cd ~/Documents/TUM/Masters/1.Semester/ITDL";
         dse = "cd ~/Documents/TUM/Masters/1.Semester/DSE";
         parprog = "cd ~/Documents/TUM/Masters/1.Semester/Parprog";
+        devops = "cd ~/Documents/TUM/Masters/1.Semester/DevOps/";
         ess = "cd ~/Documents/TUM/Masters/1.Semester/ESS";
         enix = "cd ~/nixcfg/ && vim";
         cpi = "vim ~/.pi/agent/AGENTS.md";

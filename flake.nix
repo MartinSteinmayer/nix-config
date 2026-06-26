@@ -27,6 +27,10 @@
       ...
     }:
     {
+      devShells.x86_64-linux.cuda = import ./devshells/cuda.nix {
+        inherit nixpkgs;
+      };
+
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";

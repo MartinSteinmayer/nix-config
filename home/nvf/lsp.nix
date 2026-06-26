@@ -42,6 +42,7 @@ in
       lsp.lazydev.enable = true;
     };
     markdown.enable = true;
+    xml.enable = true;
     nix.enable = true;
     python.enable = true;
     tex.enable = true;
@@ -50,6 +51,7 @@ in
   };
 
   programs.nvf.settings.vim.lsp.servers = {
+    nixd.settings.nil.nix.autoArchive = true;
     clangd = {
       cmd = lib.mkForce [ "${pkgs.clang-tools}/bin/clangd" ];
       root_dir = mkLuaInline ''
@@ -74,7 +76,14 @@ in
     clangd_ess = {
       enable = true;
       cmd = [ "${clangdArm}/bin/clangd" ];
-      filetypes = [ "c" "cpp" "objc" "objcpp" "cuda" "proto" ];
+      filetypes = [
+        "c"
+        "cpp"
+        "objc"
+        "objcpp"
+        "cuda"
+        "proto"
+      ];
       root_dir = mkLuaInline ''
         function(bufnr, on_dir)
           local name = vim.api.nvim_buf_get_name(bufnr)

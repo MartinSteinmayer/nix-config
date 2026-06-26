@@ -42,6 +42,7 @@
     extraGroups = [
       "wheel"
       "networkmanager"
+      "docker"
     ];
     shell = pkgs.zsh;
   };
@@ -120,6 +121,19 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+      wireplumber.extraConfig."99-hdmi-audio" = {
+        "monitor.alsa.rules" = [
+          {
+            matches = [
+              { "node.name" = "~alsa_output.*"; }
+            ];
+            actions.update-props = {
+              "session.suspend-timeout-seconds" = 0;
+              "node.always-process" = true;
+            };
+          }
+        ];
+      };
       # Uncomment the following line if you want to use JACK applications
       # jack.enable = true;
     };
@@ -127,6 +141,8 @@
     xserver.enable = true;
     pulseaudio.enable = false;
   };
+
+  virtualisation.docker.enable = true;
 
   security.rtkit.enable = true;
 
@@ -175,9 +191,11 @@
     ];
     extra-substituters = [
       "https://noctalia.cachix.org"
+      "https://cache.nixos-cuda.org"
     ];
     extra-trusted-public-keys = [
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
     ];
   };
 
@@ -189,6 +207,9 @@
 
   powerManagement.resumeCommands = ''
     logger "resume hook ran"
+    echo 0000:05:00.1 > /sys/bus/pci/drivers/snd_hda_intel/unbind
+    sleep 1
+    echo 0000:05:00.1 > /sys/bus/pci/drivers/snd_hda_intel/bind
   '';
 
   system.stateVersion = "25.11";

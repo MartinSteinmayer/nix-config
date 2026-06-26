@@ -270,6 +270,20 @@
       desc = "Save without formatting";
     }
     {
+      key = "<leader>Y";
+      mode = "n";
+      lua = true;
+      action = ''function() _G.copy_with_file_and_lines("line") end'';
+      desc = "Copy current line with file and line range";
+    }
+    {
+      key = "<leader>Y";
+      mode = "v";
+      lua = true;
+      action = ''function() _G.copy_with_file_and_lines("visual") end'';
+      desc = "Copy selection with file and line range";
+    }
+    {
       key = "<leader>/";
       mode = "n";
       lua = true;

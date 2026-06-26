@@ -13,6 +13,7 @@
         html = [ "prettier" ];
         astro = [ "prettier" ];
         json = [ "prettier" ];
+        xml = [ "prettier" ];
         yaml = [ "prettier" ];
         markdown = [ "prettier" ];
         nix = [ "alejandra" ];
